@@ -1,6 +1,14 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const Post = require('./models/post');
+const mongoose = require('mongoose')
 
 const app = express();
+
+mongoose.connect('mongodb://localhost:27017/mean_stack', { useNewUrlParser: true })
+
+app.use(bodyParser.json())
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -12,20 +20,22 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/api/posts', (req, res, next) => {
-  const posts = [
-    {
-      id: '33432143',
-      title: 'First Server side post',
-      content: 'This is coming from the server'
-    },
-    {
-      id: '4543645',
-      title: 'Second Server side post',
-      content: 'This is coming from the server too!'
-    },
-  ]
-  res.status(200).json(posts)
+app.post('/api/posts', async (req, res, next) => {
+  let post = new Post({
+    title: req.body.title,
+    content: req.body.content
+  })
+
+  await post.save()
+
+  res.status(201).json({
+    message: "This is a message!"
+  });
+})
+
+app.use('/api/posts', async (req, res, next) => {
+  const posts = await Post.find();
+  res.status(200).send(posts)
 })
 
 module.exports = app;
