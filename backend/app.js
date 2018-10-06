@@ -26,16 +26,28 @@ app.post('/api/posts', async (req, res, next) => {
     content: req.body.content
   })
 
-  await post.save()
+  post = await post.save()
 
   res.status(201).json({
-    message: "This is a message!"
+    message: "This is a message!",
+    post: post
   });
 })
 
-app.use('/api/posts', async (req, res, next) => {
+app.delete('/api/posts/:id', async (req, res, next) => {
+  const post = await Post.findByIdAndDelete(req.params.id);
+  res.status(200).json({
+    message: 'Post deleted!',
+    post: post
+  })
+})
+
+app.get('/api/posts', async (req, res, next) => {
   const posts = await Post.find();
-  res.status(200).send(posts)
+  res.status(200).json({
+    message: "Post Data",
+    posts: posts
+  })
 })
 
 module.exports = app;
