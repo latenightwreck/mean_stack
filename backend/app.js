@@ -39,9 +39,6 @@ app.put('/api/posts/:id', async (req, res, next) => {
     title: req.body.title,
     content: req.body.content
   });
-
-  console.log(post);
-
   res.status(200).json({
     message: 'Update successful'
   })
@@ -62,6 +59,24 @@ app.get('/api/posts', async (req, res, next) => {
     message: "Post Data",
     posts: posts
   })
+})
+
+app.get('/api/posts/:id', (req, res, next) => {
+  Post.findById(req.params.id)
+    .then(post => {
+
+      if (!post) {
+        return res.status(404).json({
+          message: 'Post not found!'
+        })
+      }
+
+      console.log(post)
+
+      res.status(200).json({
+        post
+      })
+    });
 })
 
 module.exports = app;
