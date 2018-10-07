@@ -73,9 +73,7 @@ app.get('/api/posts/:id', (req, res, next) => {
 
       console.log(post)
 
-      res.status(200).json({
-        post
-      })
+      res.status(200).send(post)
     });
 })
 
