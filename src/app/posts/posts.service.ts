@@ -48,7 +48,7 @@ export class PostsService {
       });
   }
 
-  getPostUpdateListener() {
+  getPostUpdateListener(): Observable<Post[]> {
     return this.postsUpdated.asObservable();
   }
 
