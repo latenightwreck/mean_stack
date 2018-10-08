@@ -1,6 +1,6 @@
 import { Post } from './post.model';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
@@ -11,8 +11,15 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
-  getPost(postId: string) {
-    return this.http.get<{ _id: string, title: string, content: string }>('http://localhost:3000/api/posts/' + postId);
+  getPost(postId: string): Observable<Post> {
+    return this.http.get<any>('http://localhost:3000/api/posts/' + postId)
+      .pipe(map((postData) => {
+        return {
+          id: postData._id,
+          title: postData.title,
+          content: postData.content
+        };
+      }));
   }
 
   getPosts() {
