@@ -42,14 +42,18 @@ router.post('/', multer({storage: storage}).single('image'), async (req, res, ne
   });
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', multer({ storage: storage }).single('image'), async (req, res, next) => {
+  let imagePath;
+  if (req.file) {
+    const url = req.protocol + '://' + req.get('host');
+    imagePath = url + '/images/' + req.file.filename;;
+  }
   const post = await Post.findByIdAndUpdate(req.params.id, {
     title: req.body.title,
-    content: req.body.content
+    content: req.body.content,
+    imagePath: req.body.imagePath
   });
-  res.status(200).json({
-    message: 'Update successful'
-  })
+  res.status(200).send(post)
 
 })
 
