@@ -9,6 +9,7 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mean_stack', { useNewUrlParser: true })
 
 app.use(bodyParser.json())
+app.use('/images', express.static(__dirname + '/images'))
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
